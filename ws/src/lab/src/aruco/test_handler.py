@@ -4,6 +4,7 @@ import cv2
 
 import rclpy
 from rclpy.node import Node
+from rclpy.executors import MultiThreadedExecutor
 
 
 aruco_stamps = []
@@ -15,7 +16,7 @@ class ArUcoTracker(Node):
         aruco_dict=cv2.aruco.DICT_6X6_50
         cv2.ShowUndistortedImage = True
         self.capture = cv2.VideoCapture(camera_index)
-        self.aruco_dict = aruco_dict
+        self.aruco_dict = cv2.aruco.Dictionary_get(aruco_dict)
         self.aruco_params = cv2.aruco.DetectorParameters_create()
 
         # https://docs.opencv.org/3.4/d3/ddc/group__ccalib.html#ga5825788141f468e6fbcd501d5115df15
@@ -34,7 +35,7 @@ class ArUcoTracker(Node):
         map_1_type = cv2.CV_32F
         flags = cv2.omnidir.RECTIFY_PERSPECTIVE
 
-        self.mapx, self.mapy = cv2.omnidir.initDistortRectifyMap(
+        self.mapx, self.mapy = cv2.omnidir.initUndistortRectifyMap(
             camera_matrix,
             distortion_coeffecients,
             xi,
@@ -55,12 +56,26 @@ class ArUcoTracker(Node):
             print("Hello")
 
 
-class ArUcoPublisher:
+class ArUcoPublisher(Node):
     pass
 
 
 if __name__ == "__main__":
     rclpy.init()
+    try:
+        c1 = ArUcoTracker()
+        #c2 = ArUcoPublisher()
+        
+        executor = MultiThreadedExecutor()
+        executor.add_node(c1)
+        #executor.add_node(c2)
 
+        try:
+            executor.spin()
+        finally:
+            executor.shutdown()
+            c1.destroy_node()
+#            c2.()            
 
-    ArUcoTracker()
+    finally:
+        rclpy.shutdown()
