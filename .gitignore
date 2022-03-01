@@ -16,6 +16,7 @@ msg/_*.py
 build_isolated/
 devel_isolated/
 dep_ws
+!dep_ws/src/aruco_handler
 */log
 log
 
@@ -55,3 +56,4 @@ qtcreator-*
 
 # Catkin custom files
 CATKIN_IGNORE
+
