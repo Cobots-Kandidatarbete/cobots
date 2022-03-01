@@ -2,10 +2,14 @@ from cv2 import circle
 import numpy as np
 import threading
 import cv2
+import transforms3d
 
 import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
+from geometry_msgs.msg import Transform, TransformStamped
+from builtin_interfaces.msg import Time
+from tf2_msgs.msg import TFMessage
 
 
 aruco_stamps = []
@@ -25,6 +29,9 @@ class ArUcoTracker(Node):
         self.capture = cv2.VideoCapture(camera_index)
         self.aruco_dict = cv2.aruco.Dictionary_get(aruco_dict)
         self.aruco_params = cv2.aruco.DetectorParameters_create()
+
+        # Calibration
+        # https://automaticaddison.com/how-to-perform-pose-estimation-using-an-aruco-marker/
 
         # https://docs.opencv.org/3.4/d3/ddc/group__ccalib.html#ga5825788141f468e6fbcd501d5115df15
         self.camera_matrix = np.array([
@@ -100,31 +107,81 @@ class ArUcoTracker(Node):
                     cv2.putText(frame, str(marker_id), (top_left[0], top_right[1] - 15), font, font_scale, font_color, font_thickness)
 
                     # http://amroamroamro.github.io/mexopencv/matlab/cv.estimatePoseSingleMarkers.html
-                    rotation_vectors, transformation_vectors, _ = cv2.aruco.estimatePoseSingleMarkers(marker_corner, self.marker_size, self.camera_matrix, self.distortion_coeffecients)
+                    rotation_vectors, translation_vectors, _ = cv2.aruco.estimatePoseSingleMarkers(marker_corner, self.marker_size, self.camera_matrix, self.distortion_coeffecients)
+                    
                     rotation = rotation_vectors[0, 0, :]
-                    transformation = transformation_vectors[0, 0, :]
+                    translation = translation_vectors[0, 0, :]
+
+                    rotation_matrix, _ = cv2.Rodrigues(rotation)
+                    quaternion = transforms3d.quaternions.mat2quat(rotation_matrix)
+
+                    transform = Transform()
+                    transform.translation = translation
+                    transform.rotation = quaternion
+
+                    transform_stamped = TransformStamped()
+                    transform_stamped.header.frame_id = "logitech_c270"
+                    transform_stamped.header.stamp = Time()
+                    
+                    current_time = self.get_clock().now().seconds_nanoseconds()
+                    
+                    transform_stamped.header.stamp.sec = current_time[0]
+                    transform_stamped.header.stamp.nanosec = current_time[1]
+
+                    transform_stamped.child_frame_id = f"aruco_{marker_id}"
+                    transform_stamped.transform = transform
+
+                    aruco_stamps.append(transform_stamped)
+
+                    axis_length = 0.15
+                    cv2.aruco.drawAxis(frame, self.camera_matrix, self.distortion_coeffecients, rotation, translation, axis_length)
+
+            cv2.imshow('img', frame)
+            if cv2.waitKey(5) & 0xFF == 27:
+                break
+
+        self.capture.release()
+        cv2.destroyAllWindows()
 
 
 class ArUcoPublisher(Node):
-    pass
+    def __init__(self):
+        super().__init__("ArUcoPublisher")
+
+        history_depth = 20
+        self.tf_publisher = self.create_publisher(TFMessage, "/tf", history_depth)
+        self.timer = self.create_timer(0.1, self.timer_callback)
+
+        self.get_logger().info("aruco_tracker should be started.")
+
+    def timer_callback(self):
+        messages = [a for a in aruco_stamps]
+        
+        tf_message = TFMessage()
+        tf_message.transforms = messages
+
+        self.tf_publisher.publish(tf_message)
+
+        aruco_stamps = []
+
 
 
 if __name__ == "__main__":
     rclpy.init()
     try:
         c1 = ArUcoTracker()
-        #c2 = ArUcoPublisher()
+        c2 = ArUcoPublisher()
         
         executor = MultiThreadedExecutor()
         executor.add_node(c1)
-        #executor.add_node(c2)
+        executor.add_node(c2)
 
         try:
             executor.spin()
         finally:
             executor.shutdown()
             c1.destroy_node()
-#            c2.()            
+            c2.destroy_node()            
 
     finally:
         rclpy.shutdown()
