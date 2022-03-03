@@ -15,8 +15,9 @@ msg/*Result.msg
 msg/_*.py
 build_isolated/
 devel_isolated/
-dep_ws
-!dep_ws/src
+dep_ws/build
+dep_ws/install
+dep_ws/log
 */log
 log
 
