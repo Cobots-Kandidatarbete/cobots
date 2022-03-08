@@ -1,13 +1,16 @@
 import cv2
-from cv2 import VideoCapture
 import time
-import numpy as np
 
 
 def main():
+
     index = 0
     new_index = index
     capture = cv2.VideoCapture(index)
+
+    print("Press 'q' to exit program.")
+    print("Press keys 0-9 to preview camera at given index.")
+
     while capture.isOpened():
         ret, frame = capture.read()
         if ret:
@@ -24,21 +27,21 @@ def main():
 
 
             if new_index != index:
-                capture.release()
-                new_camera = cv2.VideoCapture(new_index)
+                new_capture = cv2.VideoCapture(new_index)
                 time.sleep(0.5)
-                if new_camera.isOpened():
-                    capture = new_camera
+
+                if new_capture.isOpened():
+                    capture = new_capture
                     index = new_index
 
                 else:
-                    capture = VideoCapture(index)
                     new_index = index
 
 
         else:
             break
-    print("RELEASED CAMERA")
+    
+    print("Exiting program")
 
     capture.release()
     cv2.destroyAllWindows()
