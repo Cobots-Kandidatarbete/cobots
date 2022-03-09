@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 PATH_TO_SRC="./dep_ws/src/" 
-git clone https://github.com/sequenceplanner/aruco_handler.git $PATH_TO_SRC/aruco_handler
 git clone https://github.com/sequenceplanner/gui_tools.git $PATH_TO_SRC/gui_tools
 git clone https://github.com/sequenceplanner/mp_msgs.git $PATH_TO_SRC/mp_msgs
 git clone https://github.com/sequenceplanner/opcua_ros2_bridge.git $PATH_TO_SRC/opcua_ros2_bridge
