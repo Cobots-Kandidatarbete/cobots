@@ -1,0 +1,3 @@
+cam_name: realsense_d435
+cam_rgb_index: 6
+cam_dist_index: 4
