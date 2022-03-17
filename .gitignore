@@ -23,6 +23,7 @@ ws/build
 ws/install
 ws/log
 */log
+log
 */.vscode
 
 
