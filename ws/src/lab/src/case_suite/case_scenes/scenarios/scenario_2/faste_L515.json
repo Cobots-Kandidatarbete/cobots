@@ -1,23 +1,23 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "piab_tool",
+    "child_frame": "faste_L515",
     "parent_frame": "grundmodul",
     "transform": {
         "translation": {
             "x": 0.0,
-            "y": 0.0,
-            "z": 0.01
+            "y": 0.06,
+            "z": -0.005
         },
         "rotation": {
             "x": 0.0,
             "y": 0.0,
-            "z": 0.0,
-            "w": 1.0
+            "z": 1.0,
+            "w": 0.0
         }
     },
     "visualization": {
-        "mesh": "piab_tool.stl",
+        "mesh": "L515_faste.stl",
         "show_mesh": true,
         "interactive": false,
         "quantity": 1.0,
@@ -27,8 +27,8 @@
         "scale_y": 0.001,
         "scale_z": 0.001,
         "color_a": 1.0,
-        "color_r": 0.5,
-        "color_g": 0.5,
-        "color_b": 0.5
+        "color_r": 0.0,
+        "color_g": 0.0,
+        "color_b": 1.0
     }
 }

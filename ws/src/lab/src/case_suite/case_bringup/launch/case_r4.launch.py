@@ -14,7 +14,8 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    scenario = "scenario_2"
+    scenario = "scenario_4"
+    print("Generating launch for Robot 4")
     tf_scene_dir = FindPackageShare("case_scenes").find("case_scenes")
     bringup_dir = FindPackageShare("case_bringup").find("case_bringup")
     ur_setup_dir = FindPackageShare("ur_setup").find("ur_setup")
