@@ -14,12 +14,13 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    scenario = "scenario_2"
+    scenario = "scenario_5"
     print("Generating launch for Robot 3")
     tf_scene_dir = FindPackageShare("case_scenes").find("case_scenes")
     bringup_dir = FindPackageShare("case_bringup").find("case_bringup")
     ur_setup_dir = FindPackageShare("ur_setup").find("ur_setup")
-    ursg_setup_dir = FindPackageShare("ur_script_generator").find("ur_script_generator")
+    ursg_setup_dir = FindPackageShare(
+        "ur_script_generator").find("ur_script_generator")
 
     robot_parameters_path = os.path.join(
         ur_setup_dir, "robots", "case_r3", "general.json"
@@ -27,13 +28,13 @@ def generate_launch_description():
 
     parameters = {
         "templates_path": os.path.join(ursg_setup_dir),
-        "scenario_path": os.path.join(tf_scene_dir, "scenarios", scenario), 
+        "scenario_path": os.path.join(tf_scene_dir, "scenarios", scenario),
         "meshes_path": "/ros/ia_ros_meshes"
     }
 
     opcua_parameters = {
         "server_address": "opc.tcp://192.168.100.30:4840/",
-        "node_ids": ["ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.bool_from_plc_1","ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.bool_from_plc_2", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.bool_from_plc_3", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.bool_from_plc_4", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.bool_from_plc_5", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.int_from_plc_1","ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.int_from_plc_2", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.int_from_plc_3", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.int_from_plc_4", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.int_from_plc_5"]
+        "node_ids": ["ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.bool_from_plc_1", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.bool_from_plc_2", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.bool_from_plc_3", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.bool_from_plc_4", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.bool_from_plc_5", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.int_from_plc_1", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.int_from_plc_2", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.int_from_plc_3", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.int_from_plc_4", "ns=4;s=|var|CODESYS CONTROL FOR Raspberry Pi MC SL.Application.IO.int_from_plc_5"]
     }
 
     with open(robot_parameters_path) as jsonfile:
@@ -136,13 +137,16 @@ def generate_launch_description():
         ]
     )
     script_filename = PathJoinSubstitution(
-        [FindPackageShare(description_package), "resources", "ros_control.urscript"]
+        [FindPackageShare(description_package), "resources",
+         "ros_control.urscript"]
     )
     input_recipe_filename = PathJoinSubstitution(
-        [FindPackageShare(description_package), "resources", "rtde_input_recipe.txt"]
+        [FindPackageShare(description_package), "resources",
+         "rtde_input_recipe.txt"]
     )
     output_recipe_filename = PathJoinSubstitution(
-        [FindPackageShare(description_package), "resources", "rtde_output_recipe.txt"]
+        [FindPackageShare(description_package), "resources",
+         "rtde_output_recipe.txt"]
     )
 
     robot_description_content = Command(
@@ -150,7 +154,8 @@ def generate_launch_description():
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [FindPackageShare(description_package), "urdf", description_file]
+                [FindPackageShare(description_package),
+                 "urdf", description_file]
             ),
             " ",
             "joint_limit_params:=",

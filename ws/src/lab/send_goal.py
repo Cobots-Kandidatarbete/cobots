@@ -3,6 +3,7 @@ import json
 from std_msgs.msg import String
 import time
 
+
 def main(args=None):
     rclpy.init(args=args)
     node = rclpy.create_node('send_goal')
@@ -19,10 +20,11 @@ def main(args=None):
 
     # set a state here to force replan
     pos = {
-        "replan": True, 
-        "cyl_at_pose_1": True, 
-        "cyl_at_pose_2": False, 
-        "goal_as_string": "cyl_at_pose_2"  # write a guard as a string that the guard parser can read
+        "replan": True,
+        "cyl_at_pose_1": True,
+        "cyl_at_pose_2": False,
+        # write a guard as a string that the guard parser can read
+        "goal_as_string": "cyl_at_pose_2"
     }
 
     msg.data = json.dumps(pos)

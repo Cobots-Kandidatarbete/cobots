@@ -21,10 +21,8 @@ def main():
             if key_input == ord('q'):
                 break
 
-
-            if ord('0') <= key_input <= ord('9') :
+            if ord('0') <= key_input <= ord('9'):
                 new_index = key_input - ord('0')
-
 
             if new_index != index:
                 new_capture = cv2.VideoCapture(new_index)
@@ -37,10 +35,9 @@ def main():
                 else:
                     new_index = index
 
-
         else:
             break
-    
+
     print("Exiting program")
 
     capture.release()

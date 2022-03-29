@@ -9,7 +9,8 @@ setup(
     version="0.0.1",
     packages=[package_name],
     data_files=[
-        ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
+        ("share/ament_index/resource_index/packages",
+         ["resource/" + package_name]),
         (
             os.path.join("share", package_name, "scenarios", "scenario_1"),
             glob("scenarios/scenario_1/*"),
@@ -25,6 +26,10 @@ setup(
         (
             os.path.join("share", package_name, "scenarios", "scenario_4"),
             glob("scenarios/scenario_4/*"),
+        ),
+        (
+            os.path.join("share", package_name, "scenarios", "scenario_5"),
+            glob("scenarios/scenario_5/*"),
         ),
 
         ("share/" + package_name, ["package.xml"]),
