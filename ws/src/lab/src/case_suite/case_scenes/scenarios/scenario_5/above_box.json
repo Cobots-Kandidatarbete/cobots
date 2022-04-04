@@ -1,11 +1,11 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "pose_2",
-    "parent_frame": "Box_2_corner_1",
+    "child_frame": "above_box",
+    "parent_frame": "Box_corner_1",
     "transform": {
         "translation": {
-            "x": -0.075,
+            "x": 0.2,
             "y": -0.1975,
             "z": -0.146
         },

@@ -1,0 +1,19 @@
+{
+    "show": true,
+    "active": false,
+    "child_frame": "Box_2_corner_2",
+    "parent_frame": "Box_2_corner_1",
+    "transform": {
+        "translation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": -0.292
+        },
+        "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+        }
+    }
+}
