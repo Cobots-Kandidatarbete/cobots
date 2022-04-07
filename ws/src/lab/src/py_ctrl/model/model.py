@@ -37,17 +37,6 @@ def the_model() -> Model:
         robot_tcp_frame='suction_cup_1',  # the tool tcp to use
         gesture='unknown',
 
-        bool_to_plc_1=False,
-        bool_to_plc_2=False,
-        bool_to_plc_3=False,
-        bool_to_plc_4=False,
-        bool_to_plc_5=False,
-        int_to_plc_1=0,
-        int_to_plc_2=0,
-        int_to_plc_3=0,
-        int_to_plc_4=0,
-        int_to_plc_5=0,
-
         goal_as_string="cyl_at_pose_2",
         replan=False,
         lock_run=False,
@@ -61,17 +50,6 @@ def the_model() -> Model:
 
         replanned=False,
 
-        bool_from_plc_1=False,
-        bool_from_plc_2=False,
-        bool_from_plc_3=False,
-        bool_from_plc_4=False,
-        bool_from_plc_5=False,
-        int_from_plc_1=0,
-        int_from_plc_2=0,
-        int_from_plc_3=0,
-        int_from_plc_4=0,
-        int_from_plc_5=0,
-
         aruco_done=False,
 
         # estimated
@@ -82,11 +60,17 @@ def the_model() -> Model:
 
         arucos_locked=False,
         trigger_goal_pos1=False,
-        trigger_goal_pos2=False
+        trigger_goal_pos2=False,
+
+        # This can be either 1 or 2 (representing box 1 or 2) Initial.
+        pos_id_1=1,
+        pos_id_2=1,
+        pos_id_3=1,
+        pos_id_4=2
+
     )
 
     ops = {}
-
     # move to pose_1
     ops[f"move_to_pose_1"] = Operation(
         name=f"move_to_pose_1",
@@ -170,19 +154,6 @@ def the_model() -> Model:
         postcondition=Transition("post",
                                  g(f"robot_state == done"),
                                  a(f"!robot_run, robot_pose <- above_box_2")),
-        effects=(),
-        to_run=Transition.default()
-    )
-
-    # move to above_box_3
-    ops[f"move_to_above_box_3"] = Operation(
-        name=f"move_to_above_box_3",
-        precondition=Transition("pre",
-                                g(f"!robot_run && robot_state == initial && robot_pose == above_box_2"),
-                                a(f"robot_command = move_j, robot_run, robot_goal_frame = above_box_3")),
-        postcondition=Transition("post",
-                                 g(f"robot_state == done"),
-                                 a(f"!robot_run, robot_pose <- above_box_3")),
         effects=(),
         to_run=Transition.default()
     )

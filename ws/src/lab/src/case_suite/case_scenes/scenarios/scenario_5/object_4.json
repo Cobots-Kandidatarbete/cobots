@@ -1,0 +1,19 @@
+{
+    "show": true,
+    "active": false,
+    "child_frame": "object_4",
+    "parent_frame": "locked_aruco_4",
+    "transform": {
+        "translation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.02
+        },
+        "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+        }
+    }
+}
