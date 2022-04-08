@@ -66,7 +66,16 @@ def the_model() -> Model:
         pos_id_1=1,
         pos_id_2=1,
         pos_id_3=1,
-        pos_id_4=2
+        pos_id_4=2,
+
+        object_at_pose_1_box_1=False,
+        object_at_pose_2_box_1=False,
+        object_at_pose_3_box_1=False,
+        object_at_pose_4_box_1=False,
+        object_at_pose_1_box_2=False,
+        object_at_pose_2_box_2=False,
+        object_at_pose_3_box_2=False,
+        object_at_pose_4_box_2=False
 
     )
 
@@ -87,7 +96,7 @@ def the_model() -> Model:
     ops[f"move_to_above_pose_1"] = Operation(
         name=f"move_to_above_pose_1",
         precondition=Transition("pre",
-                                g(f"!robot_run && robot_state == initial && robot_pose == above_box"),
+                                g(f"!robot_run && robot_state == initial && robot_pose == above_box_1"),
                                 a(f"robot_command = move_j, robot_run, robot_goal_frame = above_pose_1")),
         postcondition=Transition("post",
                                  g(f"robot_state == done"),
@@ -99,7 +108,7 @@ def the_model() -> Model:
     ops[f"move_to_pose_2"] = Operation(
         name=f"move_to_pose_2",
         precondition=Transition("pre",
-                                g(f"!robot_run && robot_state == initial && robot_pose == above_box_3"),
+                                g(f"!robot_run && robot_state == initial && robot_pose == above_box_2"),
                                 a(f"robot_command = move_j, robot_run, robot_goal_frame = pose_2")),
         postcondition=Transition("post",
                                  g(f"robot_state == done"),
@@ -133,15 +142,15 @@ def the_model() -> Model:
         to_run=Transition.default()
     )
 
-    # move to above_box
-    ops[f"move_to_above_box"] = Operation(
-        name=f"move_to_above_box",
+    # move to above_box_1
+    ops[f"move_to_above_box_1"] = Operation(
+        name=f"move_to_above_box_1",
         precondition=Transition("pre",
                                 g(f"!robot_run && robot_state == initial && robot_pose == above_table && arucos_locked"),
-                                a(f"robot_command = move_j, robot_run, robot_goal_frame = above_box")),
+                                a(f"robot_command = move_j, robot_run, robot_goal_frame = above_box_1")),
         postcondition=Transition("post",
                                  g(f"robot_state == done"),
-                                 a(f"!robot_run, robot_pose <- above_box, !arucos_locked")),
+                                 a(f"!robot_run, robot_pose <- above_box_1, !arucos_locked")),
         effects=(),
         to_run=Transition.default()
     )

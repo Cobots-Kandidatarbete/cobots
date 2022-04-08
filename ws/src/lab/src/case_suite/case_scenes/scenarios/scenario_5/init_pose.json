@@ -1,7 +1,7 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "above_table",
+    "child_frame": "init_pose",
     "parent_frame": "base",
     "transform": {
         "translation": {

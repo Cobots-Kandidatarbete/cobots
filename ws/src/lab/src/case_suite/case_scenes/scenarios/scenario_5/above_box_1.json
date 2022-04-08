@@ -1,7 +1,7 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "above_box",
+    "child_frame": "above_box_1",
     "parent_frame": "Box_corner_1",
     "transform": {
         "translation": {
