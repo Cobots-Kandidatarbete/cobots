@@ -57,30 +57,35 @@ def the_model() -> Model:
         suction_cup_2_occ=False,
 
         arucos_locked=False,
+        arucos_locked_boxes=False,
         trigger_goal_pos1=False,
         trigger_goal_pos2=False,
 
         # This can be either 1 or 2 (representing box 1 or 2) Initial.
         pos_object_1=1,
         pos_object_2=1,
-        pos_object_3=1,
-        pos_object_4=1,
+        # pos_object_3=1,
+        # pos_object_4=1,
 
-        object_at_pose_1_box_1=False,
-        object_at_pose_2_box_1=False,
-        object_at_pose_3_box_1=False,
-        object_at_pose_4_box_1=False,
+        object_at_pose_1_box_1=True,
+        object_at_pose_2_box_1=True,
+        # object_at_pose_3_box_1=False,
+        # object_at_pose_4_box_1=False,
         object_at_pose_1_box_2=False,
         object_at_pose_2_box_2=False,
-        object_at_pose_3_box_2=False,
-        object_at_pose_4_box_2=False
+        # object_at_pose_3_box_2=False,
+        # object_at_pose_4_box_2=False
 
     )
 
+    nr_of_boxes = range(1, 3),  # 2 boxes
+    nr_of_poses = range(1, 3),  # 2 poses per box
+    nr_of_objects = range(1, 3)  # 2 objects
+
     ops = {}
 
-    for i in range(1, 5):
-        for j in range(1, 3):
+    for i in nr_of_objects:
+        for j in nr_of_boxes:
             ops[f"move_to_object_{i}_at_box{j}"] = Operation(
                 name=f"move_to_object_{i}",
                 precondition=Transition("pre",
@@ -93,31 +98,19 @@ def the_model() -> Model:
                 to_run=Transition.default()
             )
 
-    # move to pose_1
-    ops[f"move_to_pose_1"] = Operation(
-        name=f"move_to_pose_1",
-        precondition=Transition("pre",
-                                g(f"!robot_run && robot_state == initial && arucos_locked && robot_pose == above_pose_1"),
-                                a(f"robot_command = move_j, robot_run, robot_goal_frame = pose_1")),
-        postcondition=Transition("post",
-                                 g(f"robot_state == done"),
-                                 a(f"!robot_run, robot_pose <- pose_1")),
-        effects=(),
-        to_run=Transition.default()
-    )
-
-    # move to pose_2
-    ops[f"move_to_pose_2"] = Operation(
-        name=f"move_to_pose_2",
-        precondition=Transition("pre",
-                                g(f"!robot_run && robot_state == initial && robot_pose == above_box_2"),
-                                a(f"robot_command = move_j, robot_run, robot_goal_frame = pose_2")),
-        postcondition=Transition("post",
-                                 g(f"robot_state == done"),
-                                 a(f"!robot_run, robot_pose <- pose_2")),
-        effects=(),
-        to_run=Transition.default()
-    )
+    for i in nr_of_poses:
+        for j in nr_of_boxes:
+            ops[f"move_to_pose_{i}_box_{j}"] = Operation(
+                name=f"move_to_pose_{i}_box_{j}",
+                precondition=Transition("pre",
+                                        g(f"!robot_run && robot_state == initial && robot_pose == above_box_{j}"),
+                                        a(f"robot_command = move_j, robot_run, robot_goal_frame = pose_{i}_box_{j}")),
+                postcondition=Transition("post",
+                                         g(f"robot_state == done"),
+                                         a(f"!robot_run, robot_pose <- pose_{i}_box_{j}")),
+                effects=(),
+                to_run=Transition.default()
+            )
 
     # move to camera
     ops[f"move_to_camera"] = Operation(
@@ -149,7 +142,7 @@ def the_model() -> Model:
     ops[f"move_to_above_box_1"] = Operation(
         name=f"move_to_above_box_1",
         precondition=Transition("pre",
-                                g(f"!robot_run && robot_state == initial && robot_pose == init_pose && arucos_locked"),
+                                g(f"!robot_run && robot_state == initial && robot_pose == init_pose && arucos_locked_boxes"),
                                 a(f"robot_command = move_j, robot_run, robot_goal_frame = above_box_1")),
         postcondition=Transition("post",
                                  g(f"robot_state == done"),
@@ -161,7 +154,7 @@ def the_model() -> Model:
     ops[f"move_to_above_box_2"] = Operation(
         name=f"move_to_above_box_2",
         precondition=Transition("pre",
-                                g(f"!robot_run && robot_state == initial"),
+                                g(f"!robot_run && robot_state == initial && robot_pose == init_pose && arucos_locked_boxes"),
                                 a(f"robot_command = move_j, robot_run, robot_goal_frame = above_box_2")),
         postcondition=Transition("post",
                                  g(f"robot_state == done"),
@@ -171,17 +164,17 @@ def the_model() -> Model:
     )
 
     # Pick and place operations for all objects and suction cups
-    for i in range(1, 5):
-        for j in range(1, 5):
-            for k in range(1, 3):
+    for i in nr_of_objects:
+        for j in nr_of_poses:
+            for k in nr_of_boxes:
                 ops[f"pick_object_{i}"] = Operation(
                     name=f"pick_object_{i}",
                     precondition=Transition("pre",
-                                            g(f"(robot_pose == object_{i}) && !suction_cup_1_occ && object_at_pose_{j}_box_{k}"),
+                                            g(f"(robot_pose == object_{i}) && !suction_cup_1_occ"),
                                             a(f"robot_command = pick, robot_tcp_frame = suction_cup_1, robot_run")),
                     postcondition=Transition("post",
                                              g(f"robot_state == done"),
-                                             a(f"!robot_run, suction_cup_1_occ, !object_at_pose_{j}_box_{k}")),
+                                             a(f"!robot_run, suction_cup_1_occ")),
                     effects=(),
                     to_run=Transition.default()
                 )
@@ -198,18 +191,18 @@ def the_model() -> Model:
                     to_run=Transition.default()
                 )
 
-    ops[f"lock_arucos"] = Operation(
-        name=f"lock_arucos",
+    ops[f"lock_arucos_boxes"] = Operation(
+        name=f"lock_arucos_boxes",
         precondition=Transition(
-            "pre", g(f"!arucos_locked && robot_pose == camera"), a("lock_run")),
+            "pre", g(f"!arucos_locked_boxes && robot_pose == camera"), a("lock_run")),
         postcondition=Transition(
-            "post", g(f"lock_done"), a("!lock_run, arucos_locked")),
+            "post", g(f"lock_done"), a("!lock_run, arucos_locked_boxes")),
         effects=(),
         to_run=Transition.default()
     )
 
     # Locks the arucos above the two boxes (hopefully)
-    for i in range(1, 3):
+    for i in nr_of_boxes:
         ops[f"lock_arucos_above_box_{i}"] = Operation(
             name=f"lock_arucos_above_box_{i}",
             precondition=Transition(
