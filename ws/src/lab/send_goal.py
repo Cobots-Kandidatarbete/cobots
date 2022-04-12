@@ -21,10 +21,10 @@ def main(args=None):
     # set a state here to force replan
     pos = {
         "replan": True,
-        "cyl_at_pose_1": True,
-        "cyl_at_pose_2": False,
+        "pos_object_1": 1,
+        "pos_object_2": 1,
         # write a guard as a string that the guard parser can read
-        "goal_as_string": "cyl_at_pose_2"
+        "goal_as_string": "pos_object_1 == 2 && pos_object_2 == 2"
     }
 
     msg.data = json.dumps(pos)
