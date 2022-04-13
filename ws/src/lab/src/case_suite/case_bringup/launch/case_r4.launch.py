@@ -382,6 +382,39 @@ def generate_launch_description():
         emulate_tty=True,
     )
 
+    lidar_server = Node(
+        package="lidar_cpp",
+        executable="lidar_server",
+        namespace="",
+        output="screen",
+        arguments=["-d", rviz_config_file],
+        parameters=[opcua_parameters],
+        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        emulate_tty=True,
+    )
+
+    pointcloud_sub = Node(
+        package="pointcloud_filtering",
+        executable="pointcloud_sub",
+        namespace="",
+        output="screen",
+        arguments=["-d", rviz_config_file],
+        parameters=[opcua_parameters],
+        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        emulate_tty=True,
+    )
+
+    lidar_client = Node(
+        package="lidar_cpp",
+        executable="lidar_client",
+        namespace="",
+        output="screen",
+        arguments=["-d", rviz_config_file],
+        parameters=[opcua_parameters],
+        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        emulate_tty=True,
+    )
+
     nodes_to_start = [
         ur_robot_state_publisher_node,
         ur_script_generator_node,
@@ -398,8 +431,11 @@ def generate_launch_description():
         query_gui_node,
         marker_gui_node,
         # opc_node, # lauch the opc node from another launch file since the plc dies after a while
-        aruco_node,
-        aruco_locker
+        #aruco_node,
+        #aruco_locker,
+        lidar_server,
+        pointcloud_sub,
+        lidar_client
     ]
 
     return LaunchDescription(declared_arguments + nodes_to_start)
