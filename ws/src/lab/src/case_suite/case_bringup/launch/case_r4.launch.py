@@ -435,7 +435,7 @@ def generate_launch_description():
         #aruco_locker,
         lidar_server,
         pointcloud_sub,
-        lidar_client
+        #lidar_client
     ]
 
     return LaunchDescription(declared_arguments + nodes_to_start)
