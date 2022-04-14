@@ -1,2 +1,2 @@
 . /opt/ros/galactic/setup.bash 
-. dep_ws/install/setup.bash
+. dep_ws/install/local_setup.bash
