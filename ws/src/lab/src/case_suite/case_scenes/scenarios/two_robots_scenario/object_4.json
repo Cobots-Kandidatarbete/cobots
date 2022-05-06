@@ -1,8 +1,8 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "object_2",
-    "parent_frame": "locked_aruco_3",
+    "child_frame": "object_4",
+    "parent_frame": "locked_aruco_4",
     "transform": {
         "translation": {
             "x": 0.0,

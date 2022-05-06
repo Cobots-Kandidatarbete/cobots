@@ -88,7 +88,6 @@ def the_model() -> Model:
         # object_at_pose_3_box_2=False,
         # object_at_pose_4_box_2=False
 
-        holding=0,
     )
 
     nr_of_boxes = 2  # 2 boxes
@@ -100,7 +99,7 @@ def the_model() -> Model:
     for i in range(1, nr_of_objects+1):
         for j in range(1, nr_of_boxes+1):
             ops[f"move_to_object_{i}_at_box_{j}"] = Operation(
-                name=f"move_to_object_{i}_at_box_{j}",
+                name=f"move_to_object_{i}_box_{j}",
                 precondition=Transition("pre",
                                         g(f"!robot_run && robot_state == initial && arucos_locked && pos_object_{i} == {j} && robot_pose == above_box_{j}"),
                                         a(f"robot_command = move_j, robot_run, robot_goal_frame = object_{i}")),
@@ -184,10 +183,10 @@ def the_model() -> Model:
                     name=f"pick_object_{i}",
                     precondition=Transition("pre",
                                             g(f"(robot_pose == object_{i}) && !suction_cup_1_occ"),
-                                            a(f"robot_command = pick, robot_tcp_frame = tool0, robot_run")),
+                                            a(f"robot_command = pick, robot_tcp_frame = suction_cup_1, robot_run")),
                     postcondition=Transition("post",
                                              g(f"robot_state == done"),
-                                             a(f"!robot_run, suction_cup_1_occ, holding <- {i}")),
+                                             a(f"!robot_run, suction_cup_1_occ")),
                     effects=(),
                     to_run=Transition.default()
                 )
@@ -195,11 +194,11 @@ def the_model() -> Model:
                 ops[f"place_object_{i}_at_pose_{j}_at_box_{k}"] = Operation(
                     name=f"place_object_{i}_at_pose_{j}_at_box_{k}",
                     precondition=Transition("pre",
-                                            g(f"!robot_run && robot_state == initial && robot_pose == pose_{j}_box_{k} && suction_cup_1_occ && !object_at_pose_{j}_box_{k} && holding == {i}"),
+                                            g(f"!robot_run && robot_state == initial && robot_pose == pose_{j}_box_{k} && suction_cup_1_occ && !object_at_pose_{j}_box_{k}"),
                                             a(f"robot_command = place, robot_tcp_frame = suction_cup_1, robot_run")),
                     postcondition=Transition("post",
                                              g(f"robot_state == done"),
-                                             a(f"!robot_run, !suction_cup_1_occ, pos_object_{i} = {k}, object_at_pose_{j}_box_{k}, holding <- 0")),
+                                             a(f"!robot_run, !suction_cup_1_occ, pos_object_{i} = {k}, object_at_pose_{j}_box_{k}")),
                     effects=(),
                     to_run=Transition.default()
                 )

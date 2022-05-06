@@ -31,7 +31,10 @@ setup(
             os.path.join("share", package_name, "scenarios", "scenario_5"),
             glob("scenarios/scenario_5/*"),
         ),
-
+        (
+            os.path.join("share", package_name, "scenarios", "two_robots_scenario"),
+            glob("scenarios/two_robots_scenario/*"),
+        ),
         ("share/" + package_name, ["package.xml"]),
     ],
     install_requires=["setuptools"],

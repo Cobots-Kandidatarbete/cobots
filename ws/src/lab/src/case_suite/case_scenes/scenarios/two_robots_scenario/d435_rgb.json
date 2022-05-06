@@ -1,0 +1,27 @@
+{
+    "show": true,
+    "active": false,
+    "child_frame": "realsense_d435_rgb",
+    "parent_frame": "realsense_d435",
+    "transform": {
+        "translation": {
+            "x": -0.0325,
+            "y": -0.0,
+            "z": -0.0
+        },
+        "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+        }
+    },
+    "preferred_joint_configuration": {
+        "j0": -0.14913970628847295,
+        "j1": -3.4187098942198695,
+        "j2": 0.23421031633485967,
+        "j3": -1.492251844411232,
+        "j4": 1.5293278694152832,
+        "j5": -3.283975426350729
+    }
+}

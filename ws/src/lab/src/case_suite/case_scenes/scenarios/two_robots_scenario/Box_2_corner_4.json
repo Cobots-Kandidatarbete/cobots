@@ -1,13 +1,13 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "object_2",
-    "parent_frame": "locked_aruco_3",
+    "child_frame": "Box_2_corner_4",
+    "parent_frame": "Box_2_corner_3",
     "transform": {
         "translation": {
             "x": 0.0,
             "y": 0.0,
-            "z": 0.02
+            "z": 0.292
         },
         "rotation": {
             "x": 0.0,
