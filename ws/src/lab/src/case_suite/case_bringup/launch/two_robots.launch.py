@@ -208,25 +208,25 @@ def generate_launch_description():
 
     rviz_config_file = os.path.join(bringup_dir, "config", "scenario_2.rviz")
 
-    driver_parameters = {
+    r3_driver_parameters = {
         "ur_address": r3_robot_parameters["ip_address"],
-        "tf_prefix": r3_robot_parameters["prefix"] + "_",
+        "prefix": r3_robot_parameters["prefix"] + '_',
     }
 
     r3_ur_robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        namespace=r3_robot_parameters["prefix"] + "_",
+        namespace=r3_robot_parameters["prefix"],
         output="screen",
         parameters=[robot_description],
-        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        #remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
         emulate_tty=True,
     )
 
     r3_ur_script_generator_node = Node(
         package="ur_script_generator",
         executable="ur_script_generator",
-        namespace=r3_robot_parameters["prefix"] + "_",
+        namespace=r3_robot_parameters["prefix"],
         output="screen",
         parameters=[parameters],
         remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
@@ -236,9 +236,9 @@ def generate_launch_description():
     r3_ur_script_driver_node = Node(
         package="ur_script_driver",
         executable="ur_script_driver",
-        namespace=r3_robot_parameters["prefix"] + "_",
+        namespace=r3_robot_parameters["prefix"],
         output="screen",
-        parameters=[driver_parameters],
+        parameters=[r3_driver_parameters],
         remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
         emulate_tty=True,
     )
@@ -246,9 +246,9 @@ def generate_launch_description():
     r3_ur_script_controller_node = Node(
         package="ur_script_controller",
         executable="ur_script_controller",
-        namespace=r3_robot_parameters["prefix"] + "_",
+        namespace=r3_robot_parameters["prefix"],
         output="screen",
-        parameters=[driver_parameters],
+        parameters=[r3_driver_parameters],
         remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
         emulate_tty=True,
     )
