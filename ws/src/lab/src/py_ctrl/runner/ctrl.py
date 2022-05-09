@@ -50,9 +50,13 @@ class Runner(Node):
         self.upd_state(step_in_plan, None)
         self.upd_state(plan_status, None)
 
-        self.ur_robot_action_client = ActionClient(
+        self.r3_ur_robot_action_client = ActionClient(
             self, URScriptControl, '/ur_script_controller')
-        self.robot_action_goal_handle: Optional[ClientGoalHandle] = None
+        self.r3_robot_action_goal_handle: Optional[ClientGoalHandle] = None
+
+        self.r4_ur_robot_action_client = ActionClient(
+            self, URScriptControl, '/ur_script_controller')
+        self.r4_robot_action_goal_handle: Optional[ClientGoalHandle] = None
 
         # We will not use the goal topic. Should be defind using the state
         self.create_subscription(
@@ -139,58 +143,114 @@ class Runner(Node):
             print(f"message is bad: {msg.data}")
             print(e)
 
-    def send_ur_action_goal(self):
-        run: bool = self.state.get('robot_run')
-        if not run and self.robot_action_goal_handle is not None:
-            self.robot_action_goal_handle.cancel_goal()  # maybe do it async?
+
+
+    def r3_send_ur_action_goal(self):
+        run: bool = self.state.get('r3_robot_run')
+        if not run and self.r3_robot_action_goal_handle is not None:
+            self.r3_robot_action_goal_handle.cancel_goal()  # maybe do it async?
             print("Cancel of robot action done")
-            self.robot_action_goal_handle = None
-            self.upd_state('robot_state', "initial")
+            self.r3_robot_action_goal_handle = None
+            self.upd_state('r3_robot_state', "initial")
         elif not run:
-            self.upd_state('robot_state', "initial")
-        elif run and self.robot_action_goal_handle is None:
+            self.upd_state('r3_robot_state', "initial")
+        elif run and self.r3_robot_action_goal_handle is None:
             print("start action")
             goal_msg = URScriptControl.Goal()
-            goal_msg.command = self.state.get('robot_command')
-            goal_msg.velocity = self.state.get('robot_velocity')
-            goal_msg.acceleration = self.state.get('robot_acceleration')
-            goal_msg.goal_feature_name = self.state.get('robot_goal_frame')
-            goal_msg.tcp_name = self.state.get('robot_tcp_frame')
+            goal_msg.command = self.state.get('r3_robot_command')
+            goal_msg.velocity = self.state.get('r3_robot_velocity')
+            goal_msg.acceleration = self.state.get('r3_robot_acceleration')
+            goal_msg.goal_feature_name = self.state.get('r3_robot_goal_frame')
+            goal_msg.tcp_name = self.state.get('r3_robot_tcp_frame')
 
             print(goal_msg)
 
             print("waiting action")
-            if self.ur_robot_action_client.wait_for_server(2):
+            if self.r3_ur_robot_action_client.wait_for_server(2):
                 print("done waiting action")
-                send_goal_future = self.ur_robot_action_client.send_goal_async(
+                send_goal_future = self.r3_ur_robot_action_client.send_goal_async(
                     goal_msg)
                 send_goal_future.add_done_callback(
-                    self.ur_action_goal_response_callback)
+                    self.r3_ur_action_goal_response_callback)
             else:
                 print("timeout action")
 
-    def ur_action_goal_response_callback(self, future):
+    def r4_send_ur_action_goal(self):
+        run: bool = self.state.get('r4_robot_run')
+        if not run and self.r4_robot_action_goal_handle is not None:
+            self.r4_robot_action_goal_handle.cancel_goal()  # maybe do it async?
+            print("Cancel of robot action done")
+            self.r4_robot_action_goal_handle = None
+            self.upd_state('r4_robot_state', "initial")
+        elif not run:
+            self.upd_state('r4_robot_state', "initial")
+        elif run and self.r4_robot_action_goal_handle is None:
+            print("start action")
+            goal_msg = URScriptControl.Goal()
+            goal_msg.command = self.state.get('r4_robot_command')
+            goal_msg.velocity = self.state.get('r4_robot_velocity')
+            goal_msg.acceleration = self.state.get('r4_robot_acceleration')
+            goal_msg.goal_feature_name = self.state.get('r4_robot_goal_frame')
+            goal_msg.tcp_name = self.state.get('r4_robot_tcp_frame')
+
+            print(goal_msg)
+
+            print("waiting action")
+            if self.r4_ur_robot_action_client.wait_for_server(2):
+                print("done waiting action")
+                send_goal_future = self.r4_ur_robot_action_client.send_goal_async(
+                    goal_msg)
+                send_goal_future.add_done_callback(
+                    self.r4_ur_action_goal_response_callback)
+            else:
+                print("timeout action")
+
+    def r3_ur_action_goal_response_callback(self, future):
         goal_handle = future.result()
         if not goal_handle.accepted:
             self.get_logger().info('Goal rejected :(')
-            self.upd_state('robot_state', "failed")
-            self.robot_action_goal_handle = None
+            self.upd_state('r3_robot_state', "failed")
+            self.r3_robot_action_goal_handle = None
             return
 
-        self.robot_action_goal_handle = goal_handle
+        self.r3_robot_action_goal_handle = goal_handle
         self.get_logger().info('Goal accepted :)')
-        self.upd_state('robot_state', "exec")
+        self.upd_state('r3_robot_state', "exec")
 
         self._get_result_future = goal_handle.get_result_async()
         self._get_result_future.add_done_callback(
-            self.ur_action_get_result_callback)
+            self.r3_ur_action_get_result_callback)
 
-    def ur_action_get_result_callback(self, future):
+    def r4_ur_action_goal_response_callback(self, future):
+        goal_handle = future.result()
+        if not goal_handle.accepted:
+            self.get_logger().info('Goal rejected :(')
+            self.upd_state('r4_robot_state', "failed")
+            self.r4_robot_action_goal_handle = None
+            return
+
+        self.r3_robot_action_goal_handle = goal_handle
+        self.get_logger().info('Goal accepted :)')
+        self.upd_state('r4_robot_state', "exec")
+
+        self._get_result_future = goal_handle.get_result_async()
+        self._get_result_future.add_done_callback(
+            self.r4_ur_action_get_result_callback)
+
+
+    def r3_ur_action_get_result_callback(self, future):
         result = future.result().result
         self.get_logger().info('Result: {0}'.format(result))
-        self.upd_state('robot_state', "done")
-        self.upd_state('robot_pose', self.state.get('robot_goal_frame'))
-        self.robot_action_goal_handle = None
+        self.upd_state('r3_robot_state', "done")
+        self.upd_state('r3_robot_pose', self.state.get('r3_robot_goal_frame'))
+        self.r3_robot_action_goal_handle = None
+    
+    def r4_ur_action_get_result_callback(self, future):
+        result = future.result().result
+        self.get_logger().info('Result: {0}'.format(result))
+        self.upd_state('r4_robot_state', "done")
+        self.upd_state('r4_robot_pose', self.state.get('r4_robot_goal_frame'))
+        self.r4_robot_action_goal_handle = None
 
     def lock_marker_service(self):
         run: bool = self.state.get('lock_run')
@@ -276,7 +336,8 @@ class Runner(Node):
         self.state = tick_the_runner(self.state, self.model, True)
 
         # below, we are publishing the command variables to the simulation via ros
-        self.send_ur_action_goal()
+        self.r3_send_ur_action_goal()
+        self.r4_send_ur_action_goal()
         # self.send_marker_service()
         self.lock_marker_service()
         state_json = json.dumps(self.state.state)

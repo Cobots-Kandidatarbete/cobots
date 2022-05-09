@@ -2,7 +2,7 @@
     "show": true,
     "active": false,
     "child_frame": "camera",
-    "parent_frame": "base",
+    "parent_frame": "r4_base",
     "transform": {
         "translation": {
             "x": -0.08090169746276017,

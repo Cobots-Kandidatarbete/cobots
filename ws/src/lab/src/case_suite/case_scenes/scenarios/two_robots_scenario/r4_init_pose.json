@@ -1,8 +1,8 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "init_pose",
-    "parent_frame": "base",
+    "child_frame": "r4_init_pose",
+    "parent_frame": "r4_base",
     "transform": {
         "translation": {
             "x": -0.22122010794957767,
