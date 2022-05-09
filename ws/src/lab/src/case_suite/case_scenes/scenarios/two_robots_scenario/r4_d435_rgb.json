@@ -1,8 +1,8 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "realsense_d435_rgb",
-    "parent_frame": "realsense_d435",
+    "child_frame": "r4_realsense_d435_rgb",
+    "parent_frame": "r4_realsense_d435",
     "transform": {
         "translation": {
             "x": -0.0325,

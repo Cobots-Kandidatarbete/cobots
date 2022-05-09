@@ -49,9 +49,18 @@ def generate_launch_description():
         "rtde_port": 30003
     }
 
-    declared_arguments = []
+    r4_robot_parameters = {
+        "name": "case_r4",
+        "ur_type": "ur3e",
+        "ip_address": "192.168.100.42",
+        "prefix": "r4",
+        "rtde_port": 30003
+    }
 
-    declared_arguments.append(
+    #r3 description arguments
+    r3_declared_arguments = []
+
+    r3_declared_arguments.append(
         DeclareLaunchArgument(
             "ur_type",
             default_value=r3_robot_parameters["ur_type"],
@@ -59,28 +68,28 @@ def generate_launch_description():
         )
     )
 
-    declared_arguments.append(
+    r3_declared_arguments.append(
         DeclareLaunchArgument(
             "safety_limits",
             default_value="true",
             description="Enables the safety limits controller if true.",
         )
     )
-    declared_arguments.append(
+    r3_declared_arguments.append(
         DeclareLaunchArgument(
             "safety_pos_margin",
             default_value="0.15",
             description="The margin to lower and upper limits in the safety controller.",
         )
     )
-    declared_arguments.append(
+    r3_declared_arguments.append(
         DeclareLaunchArgument(
             "safety_k_position",
             default_value="20",
             description="k-position factor in the safety controller.",
         )
     )
-    declared_arguments.append(
+    r3_declared_arguments.append(
         DeclareLaunchArgument(
             "description_package",
             default_value="ur_description",
@@ -88,14 +97,14 @@ def generate_launch_description():
         is not set, it enables use of a custom description.",
         )
     )
-    declared_arguments.append(
+    r3_declared_arguments.append(
         DeclareLaunchArgument(
             "description_file",
             default_value="ur.urdf.xacro",
             description="URDF/XACRO description file with the robot.",
         )
     )
-    declared_arguments.append(
+    r3_declared_arguments.append(
         DeclareLaunchArgument(
             "prefix",
             default_value=r3_robot_parameters["prefix"] + "_",
@@ -113,7 +122,7 @@ def generate_launch_description():
     description_file = LaunchConfiguration("description_file")
     prefix = LaunchConfiguration("prefix")
 
-    joint_limit_params = PathJoinSubstitution(
+    r3_joint_limit_params = PathJoinSubstitution(
         [
             FindPackageShare("ur_setup"),
             "robots",
@@ -121,7 +130,7 @@ def generate_launch_description():
             "joint_limits.yaml",
         ]
     )
-    kinematics_params = PathJoinSubstitution(
+    r3_kinematics_params = PathJoinSubstitution(
         [
             FindPackageShare("ur_setup"),
             "robots",
@@ -129,7 +138,7 @@ def generate_launch_description():
             "default_kinematics.yaml",
         ]
     )
-    physical_params = PathJoinSubstitution(
+    r3_physical_params = PathJoinSubstitution(
         [
             FindPackageShare("ur_setup"),
             "robots",
@@ -137,7 +146,7 @@ def generate_launch_description():
             "physical_parameters.yaml",
         ]
     )
-    visual_params = PathJoinSubstitution(
+    r3_visual_params = PathJoinSubstitution(
         [
             FindPackageShare("ur_setup"),
             "robots",
@@ -145,20 +154,20 @@ def generate_launch_description():
             "visual_parameters.yaml",
         ]
     )
-    script_filename = PathJoinSubstitution(
+    r3_script_filename = PathJoinSubstitution(
         [FindPackageShare(description_package), "resources",
          "ros_control.urscript"]
     )
-    input_recipe_filename = PathJoinSubstitution(
+    r3_input_recipe_filename = PathJoinSubstitution(
         [FindPackageShare(description_package), "resources",
          "rtde_input_recipe.txt"]
     )
-    output_recipe_filename = PathJoinSubstitution(
+    r3_output_recipe_filename = PathJoinSubstitution(
         [FindPackageShare(description_package), "resources",
          "rtde_output_recipe.txt"]
     )
 
-    robot_description_content = Command(
+    r3_robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
@@ -168,16 +177,16 @@ def generate_launch_description():
             ),
             " ",
             "joint_limit_params:=",
-            joint_limit_params,
+            r3_joint_limit_params,
             " ",
             "kinematics_params:=",
-            kinematics_params,
+            r3_kinematics_params,
             " ",
             "physical_params:=",
-            physical_params,
+            r3_physical_params,
             " ",
             "visual_params:=",
-            visual_params,
+            r3_visual_params,
             " ",
             "safety_limits:=",
             safety_limits,
@@ -192,19 +201,179 @@ def generate_launch_description():
             ur_type,
             " ",
             "script_filename:=",
-            script_filename,
+            r3_script_filename,
             " ",
             "input_recipe_filename:=",
-            input_recipe_filename,
+            r3_input_recipe_filename,
             " ",
             "output_recipe_filename:=",
-            output_recipe_filename,
+            r3_output_recipe_filename,
             " ",
             "prefix:=",
             prefix,
         ]
     )
-    robot_description = {"robot_description": robot_description_content}
+    r3_robot_description = {"robot_description": r3_robot_description_content}
+
+
+
+    #r4 description arguments
+    r4_declared_arguments = []
+
+    r4_declared_arguments.append(
+        DeclareLaunchArgument(
+            "ur_type",
+            default_value=r4_robot_parameters["ur_type"],
+            description="Type/series of used UR robot.",
+        )
+    )
+
+    r4_declared_arguments.append(
+        DeclareLaunchArgument(
+            "safety_limits",
+            default_value="true",
+            description="Enables the safety limits controller if true.",
+        )
+    )
+    r4_declared_arguments.append(
+        DeclareLaunchArgument(
+            "safety_pos_margin",
+            default_value="0.15",
+            description="The margin to lower and upper limits in the safety controller.",
+        )
+    )
+    r4_declared_arguments.append(
+        DeclareLaunchArgument(
+            "safety_k_position",
+            default_value="20",
+            description="k-position factor in the safety controller.",
+        )
+    )
+    r4_declared_arguments.append(
+        DeclareLaunchArgument(
+            "description_package",
+            default_value="ur_description",
+            description="Description package with robot URDF/XACRO files. Usually the argument \
+        is not set, it enables use of a custom description.",
+        )
+    )
+    r4_declared_arguments.append(
+        DeclareLaunchArgument(
+            "description_file",
+            default_value="ur.urdf.xacro",
+            description="URDF/XACRO description file with the robot.",
+        )
+    )
+    r4_declared_arguments.append(
+        DeclareLaunchArgument(
+            "prefix",
+            default_value=r4_robot_parameters["prefix"] + "_",
+            description="Prefix of the joint names, useful for \
+        multi-robot setup. If changed than also joint names in the controllers' configuration \
+        have to be updated.",
+        )
+    )
+
+    ur_type = LaunchConfiguration("ur_type")
+    safety_limits = LaunchConfiguration("safety_limits")
+    safety_pos_margin = LaunchConfiguration("safety_pos_margin")
+    safety_k_position = LaunchConfiguration("safety_k_position")
+    description_package = LaunchConfiguration("description_package")
+    description_file = LaunchConfiguration("description_file")
+    prefix = LaunchConfiguration("prefix")
+
+    r4_joint_limit_params = PathJoinSubstitution(
+        [
+            FindPackageShare("ur_setup"),
+            "robots",
+            r4_robot_parameters["name"],
+            "joint_limits.yaml",
+        ]
+    )
+    r4_kinematics_params = PathJoinSubstitution(
+        [
+            FindPackageShare("ur_setup"),
+            "robots",
+            r4_robot_parameters["name"],
+            "default_kinematics.yaml",
+        ]
+    )
+    r4_physical_params = PathJoinSubstitution(
+        [
+            FindPackageShare("ur_setup"),
+            "robots",
+            r4_robot_parameters["name"],
+            "physical_parameters.yaml",
+        ]
+    )
+    r4_visual_params = PathJoinSubstitution(
+        [
+            FindPackageShare("ur_setup"),
+            "robots",
+            r4_robot_parameters["name"],
+            "visual_parameters.yaml",
+        ]
+    )
+    r4_script_filename = PathJoinSubstitution(
+        [FindPackageShare(description_package), "resources",
+         "ros_control.urscript"]
+    )
+    r4_input_recipe_filename = PathJoinSubstitution(
+        [FindPackageShare(description_package), "resources",
+         "rtde_input_recipe.txt"]
+    )
+    r4_output_recipe_filename = PathJoinSubstitution(
+        [FindPackageShare(description_package), "resources",
+         "rtde_output_recipe.txt"]
+    )
+
+    r4_robot_description_content = Command(
+        [
+            PathJoinSubstitution([FindExecutable(name="xacro")]),
+            " ",
+            PathJoinSubstitution(
+                [FindPackageShare(description_package),
+                 "urdf", description_file]
+            ),
+            " ",
+            "joint_limit_params:=",
+            r4_joint_limit_params,
+            " ",
+            "kinematics_params:=",
+            r4_kinematics_params,
+            " ",
+            "physical_params:=",
+            r4_physical_params,
+            " ",
+            "visual_params:=",
+            r4_visual_params,
+            " ",
+            "safety_limits:=",
+            safety_limits,
+            " ",
+            "safety_pos_margin:=",
+            safety_pos_margin,
+            " ",
+            "safety_k_position:=",
+            safety_k_position,
+            " ",
+            "name:=",
+            ur_type,
+            " ",
+            "script_filename:=",
+            r4_script_filename,
+            " ",
+            "input_recipe_filename:=",
+            r4_input_recipe_filename,
+            " ",
+            "output_recipe_filename:=",
+            r4_output_recipe_filename,
+            " ",
+            "prefix:=",
+            prefix,
+        ]
+    )
+    r4_robot_description = {"robot_description": r4_robot_description_content}
 
     rviz_config_file = os.path.join(bringup_dir, "config", "scenario_2.rviz")
 
@@ -213,12 +382,27 @@ def generate_launch_description():
         "prefix": r3_robot_parameters["prefix"] + '_',
     }
 
+    r4_driver_parameters = {
+        "ur_address": r4_robot_parameters["ip_address"],
+        "prefix": r4_robot_parameters["prefix"] + '_',
+    }
+
     r3_ur_robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         namespace=r3_robot_parameters["prefix"],
         output="screen",
-        parameters=[robot_description],
+        parameters=[r3_robot_description],
+        #remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        emulate_tty=True,
+    )
+
+    r4_ur_robot_state_publisher_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        namespace=r4_robot_parameters["prefix"],
+        output="screen",
+        parameters=[r4_robot_description],
         #remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
         emulate_tty=True,
     )
@@ -227,6 +411,16 @@ def generate_launch_description():
         package="ur_script_generator",
         executable="ur_script_generator",
         namespace=r3_robot_parameters["prefix"],
+        output="screen",
+        parameters=[parameters],
+        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        emulate_tty=True,
+    )
+
+    r4_ur_script_generator_node = Node(
+        package="ur_script_generator",
+        executable="ur_script_generator",
+        namespace=r4_robot_parameters["prefix"],
         output="screen",
         parameters=[parameters],
         remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
@@ -243,12 +437,32 @@ def generate_launch_description():
         emulate_tty=True,
     )
 
+    r4_ur_script_driver_node = Node(
+        package="ur_script_driver",
+        executable="ur_script_driver",
+        namespace=r4_robot_parameters["prefix"],
+        output="screen",
+        parameters=[r4_driver_parameters],
+        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        emulate_tty=True,
+    )
+
     r3_ur_script_controller_node = Node(
         package="ur_script_controller",
         executable="ur_script_controller",
         namespace=r3_robot_parameters["prefix"],
         output="screen",
         parameters=[r3_driver_parameters],
+        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        emulate_tty=True,
+    )
+
+    r4_ur_script_controller_node = Node(
+        package="ur_script_controller",
+        executable="ur_script_controller",
+        namespace=r4_robot_parameters["prefix"],
+        output="screen",
+        parameters=[r4_driver_parameters],
         remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
         emulate_tty=True,
     )
@@ -390,6 +604,10 @@ def generate_launch_description():
         r3_ur_script_generator_node,
         r3_ur_script_driver_node,
         r3_ur_script_controller_node,
+        r4_ur_robot_state_publisher_node,
+        r4_ur_script_generator_node,
+        r4_ur_script_driver_node,
+        r4_ur_script_controller_node,
         tf_lookup_node,
         tf_broadcast_node,
         tf_sms_node,
@@ -404,7 +622,7 @@ def generate_launch_description():
         aruco_locker
     ]
 
-    return LaunchDescription(declared_arguments + nodes_to_start)
+    return LaunchDescription(r3_declared_arguments + r4_declared_arguments + nodes_to_start)
 
 
 if __name__ == "__main__":

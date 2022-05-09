@@ -1,13 +1,13 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "realsense_d435",
-    "parent_frame": "faste_d435",
+    "child_frame": "r4_vention_stand",
+    "parent_frame": "floor",
     "transform": {
         "translation": {
-            "x": 0.0,
-            "y": -0.003,
-            "z": 0.105
+            "x": 2.0,
+            "y": 0.0,
+            "z": 1.005
         },
         "rotation": {
             "x": 0.0,
@@ -17,7 +17,7 @@
         }
     },
     "visualization": {
-        "mesh": "D435.stl",
+        "mesh": "vention_stand.stl",
         "show_mesh": true,
         "interactive": false,
         "quantity": 1.0,
@@ -28,7 +28,7 @@
         "scale_z": 0.001,
         "color_a": 1.0,
         "color_r": 0.0,
-        "color_g": 1.0,
-        "color_b": 0.0
+        "color_g": 0.4,
+        "color_b": 0.6
     }
 }

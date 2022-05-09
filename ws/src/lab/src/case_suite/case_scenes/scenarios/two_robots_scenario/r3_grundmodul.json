@@ -1,7 +1,7 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "grundmodul",
+    "child_frame": "r3_grundmodul",
     "parent_frame": "r3_tool0",
     "transform": {
         "translation": {
