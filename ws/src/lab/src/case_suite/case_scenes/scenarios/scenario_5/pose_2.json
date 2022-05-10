@@ -2,7 +2,7 @@
     "show": true,
     "active": false,
     "child_frame": "pose_2",
-    "parent_frame": "Box_2_corner_1",
+    "parent_frame": "locked_aruco_500",
     "transform": {
         "translation": {
             "x": -0.075,

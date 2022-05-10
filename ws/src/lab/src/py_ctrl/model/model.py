@@ -163,6 +163,7 @@ def the_model() -> Model:
         effects=(),
         to_run=Transition.default()
     )
+
     # move to above_box_2
     ops[f"move_to_above_box_2"] = Operation(
         name=f"move_to_above_box_2",
@@ -184,7 +185,7 @@ def the_model() -> Model:
                     name=f"pick_object_{i}",
                     precondition=Transition("pre",
                                             g(f"(robot_pose == object_{i}) && !suction_cup_1_occ"),
-                                            a(f"robot_command = pick, robot_tcp_frame = tool0, robot_run")),
+                                            a(f"robot_command = pick, robot_tcp_frame = suction_cup_1, robot_run")),
                     postcondition=Transition("post",
                                              g(f"robot_state == done"),
                                              a(f"!robot_run, suction_cup_1_occ, holding <- {i}")),
