@@ -52,6 +52,17 @@ def the_model() -> Model:
 
         aruco_done=False,
 
+        bool_to_plc_1=False,
+        bool_to_plc_2=False,
+        bool_to_plc_3=False,
+        bool_to_plc_4=False,
+        bool_to_plc_5=False,
+        int_to_plc_1=0,
+        int_to_plc_2=0,
+        int_to_plc_3=0,
+        int_to_plc_4=0,
+        int_to_plc_5=0,
+
         # estimated
         suction_cup_1_occ=False,  # If a suction cup is occupied or not
         suction_cup_2_occ=False,
@@ -84,7 +95,7 @@ def the_model() -> Model:
     ops[f"move_to_pose_1"] = Operation(
         name=f"move_to_pose_1",
         precondition=Transition("pre",
-                                g(f"!robot_run && robot_state == initial && arucos_locked && robot_pose == above_pose_1"),
+                                g(f"!robot_run && robot_state == initial && arucos_locked && robot_pose == camera"),
                                 a(f"robot_command = move_j, robot_run, robot_goal_frame = pose_1")),
         postcondition=Transition("post",
                                  g(f"robot_state == done"),
@@ -120,7 +131,7 @@ def the_model() -> Model:
     ops[f"move_to_camera"] = Operation(
         name=f"move_to_camera",
         precondition=Transition("pre",
-                                g(f"!robot_run && robot_state == initial && robot_pose == above_table"),
+                                g(f"!robot_run && robot_state == initial"),
                                 a(f"robot_command = move_j, robot_run, robot_goal_frame = camera")),
         postcondition=Transition("post",
                                  g(f"robot_state == done"),
