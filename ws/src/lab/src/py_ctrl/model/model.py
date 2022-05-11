@@ -79,12 +79,12 @@ def the_model() -> Model:
         # pos_object_3=1,
         # pos_object_4=1,
 
-        object_at_pose_1_box_1=True,
-        object_at_pose_2_box_1=True,
+        object_at_pose_1_box_1=False,
+        object_at_pose_2_box_1=False,
         # object_at_pose_3_box_1=False,
         # object_at_pose_4_box_1=False,
-        object_at_pose_1_box_2=False,
-        object_at_pose_2_box_2=False,
+        object_at_pose_1_box_2=True,
+        object_at_pose_2_box_2=True,
         # object_at_pose_3_box_2=False,
         # object_at_pose_4_box_2=False
 
@@ -200,7 +200,7 @@ def the_model() -> Model:
                                             a(f"robot_command = place, robot_tcp_frame = suction_cup_1, robot_run")),
                     postcondition=Transition("post",
                                              g(f"robot_state == done"),
-                                             a(f"!robot_run, !suction_cup_1_occ, pos_object_{i} = {k}, object_at_pose_{j}_box_{k}, holding <- 0")),
+                                             a(f"!robot_run, !suction_cup_1_occ, pos_object_{i} = {k}, object_at_pose_{j}_box_{k}, holding <- 0, !arucos_locked")),
                     effects=(),
                     to_run=Transition.default()
                 )
